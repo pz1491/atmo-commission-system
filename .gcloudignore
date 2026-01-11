@@ -1,9 +1,5 @@
 # This file specifies files that are *not* uploaded to Google Cloud
-# using gcloud. It follows the same syntax as .gitignore, with the addition of
-# "#!include" directives (which insert the entries of the given .gitignore-style
-# file at that point).
-
-#!include:.gitignore
+# using gcloud. It follows the same syntax as .gitignore
 
 # Python
 __pycache__/
@@ -45,36 +41,46 @@ ENV/
 htmlcov/
 tests/
 
-# Documentation
+# Documentation (keep important docs)
 docs/
 *.md
 !README.md
+!README_V2.md
 
 # Git
 .git/
 .gitignore
+.github/
 
 # Backup files
 *.backup
 *.bak
 *.old
+*_backup.py
+*_v1_backup.py
 
 # Data files (will be stored in persistent storage)
 data/
 *.db
 *.sqlite
-*.json
 
 # Logs
 *.log
 
-# Environment
+# Environment examples (keep .env for secrets)
 .env.example
 
-# Docker (not needed for Cloud Run source deploy)
-Dockerfile
+# Docker compose (not needed, but keep Dockerfile!)
 docker-compose.yml
 
 # Design documents
 design*.md
 CHANGELOG*.md
+DEPLOY*.md
+DELIVERY.md
+QUICKSTART.md
+BUGFIX*.md
+สรุปการส่งมอบ*.md
+
+# Research
+gcp-research/
