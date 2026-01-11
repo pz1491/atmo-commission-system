@@ -1,0 +1,58 @@
+# Cloud Run service configuration
+# Deploy with: gcloud run services replace cloudrun.yaml
+
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: atmo-commission
+  labels:
+    cloud.googleapis.com/location: asia-southeast1
+  annotations:
+    run.googleapis.com/ingress: all
+    run.googleapis.com/ingress-status: all
+spec:
+  template:
+    metadata:
+      annotations:
+        # Autoscaling
+        autoscaling.knative.dev/minScale: '0'
+        autoscaling.knative.dev/maxScale: '10'
+        
+        # CPU and Memory
+        run.googleapis.com/cpu-throttling: 'true'
+        run.googleapis.com/startup-cpu-boost: 'false'
+        
+        # Execution environment
+        run.googleapis.com/execution-environment: gen2
+        
+        # Secrets
+        run.googleapis.com/secrets: |
+          LINE_CHANNEL_ACCESS_TOKEN=line-access-token:latest
+          LINE_CHANNEL_SECRET=line-channel-secret:latest
+    spec:
+      containerConcurrency: 80
+      timeoutSeconds: 300
+      serviceAccountName: PROJECT_NUMBER-compute@developer.gserviceaccount.com
+      containers:
+      - image: IMAGE_URL
+        ports:
+        - name: http1
+          containerPort: 8080
+        env:
+        - name: PORT
+          value: '8080'
+        resources:
+          limits:
+            cpu: '1000m'
+            memory: 512Mi
+        startupProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 0
+          timeoutSeconds: 240
+          periodSeconds: 240
+          failureThreshold: 1
+  traffic:
+  - percent: 100
+    latestRevision: true
