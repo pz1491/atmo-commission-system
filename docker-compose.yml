@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  atmo-commission:
+    build: .
+    container_name: atmo-commission-system
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./images:/app/images
+    env_file:
+      - .env
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Bangkok
+    networks:
+      - atmo-network
+
+networks:
+  atmo-network:
+    driver: bridge
